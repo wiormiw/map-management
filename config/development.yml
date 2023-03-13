@@ -1,33 +1,15 @@
 app:
   domain: localhost
   kind: development
-  port: 8080
-
-jwt:
-  confirm_email:
-    secret:
-      jwt_secret: emailconfirm
-    options:
-      expires_in: 14hr
-      issuer: poonsht
-      audience: poonsht
-  private_route:
-    secret:
-      jwt_secret: privateroute
-    options:
-      expires_in: 30d
-      issuer: poonsht
-      audience: poonsht
+  port: 3000
 
 db:
-  mongo:
+  postgres:
     username: root
     password: root
     host: localhost
-    port: 27017
-    name: todo_template
-    auth: admin
-    collection: todo
+    port: 5432
+    name: map-management-dev
 
 queue:
   connection:

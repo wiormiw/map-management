@@ -1,4 +1,4 @@
-import { TodoInterface } from './todo.interface'
+import { MapInterface } from './map.interface'
 interface dataInterface {
   code: number
   message: string
@@ -17,5 +17,5 @@ export type ResponseInterface =
   | Error
   | SuccessInterface
   | ErrorInterface
-  | TodoInterface
-  | TodoInterface[]
+  | MapInterface
+  | MapInterface[]

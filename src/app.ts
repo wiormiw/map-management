@@ -1,6 +1,6 @@
 import fastify, { FastifyInstance } from 'fastify'
 import config from './config/config'
-import MongoAdapter from './adapters/mongo.adapter'
+import PostgresAdapter from './adapters/postgres.adapter'
 import RabbitMQAdapter from './adapters/rabbitmq.adapter'
 
 class App {
@@ -9,12 +9,11 @@ class App {
   public app_port: number = parseInt(`${config.app.port}`, 10) ?? 8080
 
   private databaseInfo = {
-    username: config.db.mongo.username!,
-    password: config.db.mongo.password!,
-    host: config.db.mongo.host!,
-    port: parseInt(`${config.db.mongo.port}`, 10) ?? 27017,
-    dbName: config.db.mongo.name!,
-    authName: config.db.mongo.auth!,
+    username: config.db.postgres.username!,
+    password: config.db.postgres.password!,
+    host: config.db.postgres.host!,
+    port: parseInt(`${config.db.postgres.port}`, 10) ?? 5432,
+    dbName: config.db.postgres.name!,
   }
 
   private queueInfo = {
@@ -33,12 +32,12 @@ class App {
   }
 
   private async connectDatabase() {
-    let { username, password, host, port, dbName, authName } = this.databaseInfo
-    await new MongoAdapter(username, password, host, port, dbName, authName)
+    let { username, password, host, port, dbName } = this.databaseInfo
+    new PostgresAdapter(username, password, host, port, dbName)
   }
 
   private async connectQueue() {
-    await RabbitMQAdapter.getInstance(this.queueInfo)
+    RabbitMQAdapter.getInstance(this.queueInfo)
   }
 
   private register(plugins: { forEach: (arg0: (plugin: any) => void) => void }) {
@@ -53,7 +52,13 @@ class App {
       this.app.register(router.routes, { prefix: router.prefix_route })
     })
 
-    this.app.get('/healthcheck', async (request, reply) => { reply.send({healthcheck: "server is alive"}) })
+    this.app.get('/', async (request, reply) => {
+      reply.send({message: `App listening on the http://${this.app_domain}:${this.app_port} 🌟👻`})
+    })
+
+    this.app.get('/healthcheck', async (request, reply) => {
+      reply.send({healthcheck: "server is alive"})
+    })
   }
 
   public listen() {

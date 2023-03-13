@@ -1,11 +1,11 @@
 import RabbitMQAdapter from '../adapters/rabbitmq.adapter'
-import { InfoQueueDTO } from '../entities/dtos/queue.dto'
-import { TodoInterface } from '../entities/interfaces/data/todo.interface'
+import { InfoQueueDTO } from '../models/dtos/queue.dto'
+import { MapInterface } from '../models/interfaces/data/map.interface'
 
 class QueueRepository {
-  public async sendTo(country: string, message: TodoInterface) {
+  public async sendTo(country: string, message: MapInterface) {
     const queueInfo: InfoQueueDTO = {
-      channel: 'twitter',
+      channel: 'map',
       country: country,
       queue: 'backward',
     }

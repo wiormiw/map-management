@@ -1,4 +1,4 @@
-import { ResponseInterface } from '../entities/interfaces/data/response.interface'
+import { ResponseInterface } from '../models/interfaces/data/response.interface'
 import { FastifyReply } from 'fastify'
 
 const reply = async (replyponseData: ResponseInterface, reply: FastifyReply) => {

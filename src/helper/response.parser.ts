@@ -1,4 +1,4 @@
-import { ResponseInterface, SuccessInterface, ErrorInterface } from '../entities/interfaces/data/response.interface'
+import { ResponseInterface, SuccessInterface, ErrorInterface } from '../models/interfaces/data/response.interface'
 
 const setFormatError = (code: number, message: string): ErrorInterface => {
   return {

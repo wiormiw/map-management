@@ -1,6 +1,6 @@
 import amqp, { Connection, Channel } from 'amqplib'
-import { ConnectionInfoQueueDTO, InfoQueueDTO } from '../entities/dtos/queue.dto'
-import { TodoInterface } from '../entities/interfaces/data/todo.interface'
+import { ConnectionInfoQueueDTO, InfoQueueDTO } from '../models/dtos/queue.dto'
+import { MapInterface } from '../models/interfaces/data/map.interface'
 import config from '../config/config'
 
 class RabbitMQAdapter {
@@ -41,7 +41,7 @@ class RabbitMQAdapter {
     this.channel = await this.connection.createChannel()
   }
 
-  public async sendTo(queueInfo: InfoQueueDTO, message: TodoInterface) {
+  public async sendTo(queueInfo: InfoQueueDTO, message: MapInterface) {
     let data = JSON.stringify(message)
     let queueName = this.getQueueName(queueInfo)
     await this.createChannel()

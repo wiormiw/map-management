@@ -1,10 +1,17 @@
 import App from './app'
-import AuthPlugin from './plugins/auth.plugin'
-import TodoRoutes from './routes/todo.route'
+import multer from 'fastify-multer'
+import fastifyCors from '@fastify/cors'
+
+import MapRoutes from './routes/map.route'
 
 const app = new App({
-  routes: [TodoRoutes],
-  plugins: [AuthPlugin],
+  routes: [
+    MapRoutes,
+  ],
+  plugins: [
+    multer.contentParser,
+    fastifyCors,
+  ],
 })
 
 app.listen()
