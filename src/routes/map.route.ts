@@ -1,44 +1,18 @@
-import { FastifyInstance, FastifyPluginOptions, FastifyRequest } from 'fastify'
+import { FastifyInstance, FastifyPluginOptions, FastifyReply, FastifyRequest } from 'fastify'
 import MapController from '../controllers/map.controller'
 import responseHandler from '../helper/response.handler'
 import { createDTO, updateDTO, deleteDTO, uploadDTO } from '../models/dtos/map.dto'
 import * as Validator from '../helper/validate.handler'
-import multer from 'fastify-multer'
+import path from 'path'
 
 class MapRoutes {
   public prefix_route = '/maps'
-
-  private storage = multer.diskStorage({
-    destination: (_request, _file, cb) => {
-      cb(null, './uploads')
-    },
-    filename: (_request, file, cb) => {
-      cb(null, `${file.fieldname}-${Date.now()}-${file.originalname}`)
-    }
-  })
-
-  private upload = multer({
-    storage: this.storage,
-    fileFilter: (_request, file, cb) => {
-      if (file.mimetype === 'application/octet-stream' && (file.originalname.endsWith('.shp') || file.originalname.endsWith('.shx') || file.originalname.endsWith('.dbf') || file.originalname.endsWith('.prj'))) {
-        cb(null, true);
-      } else if (file.mimetype === 'application/vnd.geo+json') {
-        cb(null, true);
-      } else if (file.mimetype === 'image/tiff' && (file.originalname.endsWith('.tiff') || file.originalname.endsWith('.tif'))) {
-        cb(null, true);
-      } else if (file.mimetype === 'text/xml' && file.originalname.endsWith('.osm')) {
-        cb(null, true);
-      } else {
-        cb(new Error('File type not supported'));
-      }
-    },
-  })
   
   async routes(fastify: FastifyInstance, options: FastifyPluginOptions, done: any) {
 
-    fastify.post('/upload', { preHandler: this.upload.single('map_file') }, async (request: uploadDTO, reply) => {
+    fastify.post('/upload', { schema: uploadDTO, attachValidation: true }, async (request: FastifyRequest, reply: FastifyReply) => {
       responseHandler(async () => {
-        const file = request.file
+        const file = await request.file()
         const data = await MapController.uploadMap(file)
         return data
       }, reply)

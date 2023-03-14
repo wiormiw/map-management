@@ -1,9 +1,19 @@
-import { FastifyRequest } from 'fastify';
-import { MulterFile } from 'multer';
+import { ReadStream } from "fs";
 
-interface uploadDTO extends FastifyRequest {
-  file: MulterFile;
+const uploadDTO = {
+  body: {
+    type: 'object',
+    properties: {
+      file: { type: 'object' }
+    }
+  }
 }
+
+interface filePart {
+  file: () => Promise<ReadStream>;
+  headers: Record<string, string>;
+}
+
 
 interface createDTO {
   id: string 
@@ -28,4 +38,4 @@ interface whitelistUpdateFieldDTO {
   updated_at?: Date
 }
 
-export { uploadDTO, createDTO, updateDTO, deleteDTO, whitelistUpdateFieldDTO }
+export { uploadDTO, filePart, createDTO, updateDTO, deleteDTO, whitelistUpdateFieldDTO }

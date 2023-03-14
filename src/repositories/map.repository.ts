@@ -1,6 +1,7 @@
 import { Map } from '../models/schemas/map.schema'
 import { MapInterface } from '../models/interfaces/data/map.interface'
-import { createDTO, uploadDTO, whitelistUpdateFieldDTO } from '../models/dtos/map.dto'
+import { createDTO, whitelistUpdateFieldDTO } from '../models/dtos/map.dto'
+import path from 'path'
 import fs from 'fs'
 
 class MapRepository {
@@ -25,6 +26,11 @@ class MapRepository {
 
   public async findMapById(id: string): Promise<MapInterface | null> {
     const result: MapInterface = (await Map.findByPk(id))!
+    return result
+  }
+
+  public async uploadMap(file: Buffer, fileName: string, mimeType: string, extension: string): Promise<string> {
+    const result
     return result
   }
 

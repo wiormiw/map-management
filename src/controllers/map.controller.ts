@@ -1,31 +1,22 @@
 import { MapInterface } from '../models/interfaces/data/map.interface'
 import MapRepository from '../repositories/map.repository'
-import { File } from 'fastify-multer/lib/interfaces'
 
 import {
   createDTO,
   updateDTO,
   deleteDTO,
 } from '../models/dtos/map.dto'
+import { allowedExtensions, allowedMimetypes } from 'src/helper/file.validate.handler'
+import { FastifyReply, FastifyRequest } from 'fastify'
 
 async function findAllMap(): Promise<MapInterface[]> {
   const mapRepository = MapRepository.getInstance()
   return await mapRepository.findAllMap()
 }
 
-async function uploadMap(reqUpload: File): Promise<Object> {
+async function uploadMap(file: Buffer): Promise<Object> {
   try {
-    const { fieldname, originalname, encoding, mimetype, buffer } = reqUpload
-    return {
-      "message": `200 : Upload File is successfully`,
-      "data": {
-        fieldname,
-        originalname,
-        encoding,
-        mimetype,
-        buffer,
-      }      
-    }
+    
   } catch (err) {
     console.log(err)
     throw new Error(`400 : Upload File is not successfully`)

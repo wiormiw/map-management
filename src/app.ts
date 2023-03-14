@@ -2,9 +2,10 @@ import fastify, { FastifyInstance } from 'fastify'
 import config from './config/config'
 import PostgresAdapter from './adapters/postgres.adapter'
 import RabbitMQAdapter from './adapters/rabbitmq.adapter'
+import { Server, IncomingMessage, ServerResponse } from 'http'
 
 class App {
-  public app: FastifyInstance
+  public app: FastifyInstance<Server, IncomingMessage, ServerResponse>
   public app_domain: string = config.app.domain
   public app_port: number = parseInt(`${config.app.port}`, 10) ?? 8080
 
@@ -40,24 +41,25 @@ class App {
     RabbitMQAdapter.getInstance(this.queueInfo)
   }
 
-  private register(plugins: { forEach: (arg0: (plugin: any) => void) => void }) {
-    plugins.forEach((plugin) => {
-      this.app.register(plugin)
+  private register(plugins: { plugin: any, options?: any }[]) {
+    plugins.forEach(({ plugin, options }) => {
+      this.app.register(plugin, options)
     })
   }
+  
 
   public routes(routes: { forEach: (arg0: (routes: any) => void) => void }) {
-    routes.forEach((route) => {
-      let router = new route()
-      this.app.register(router.routes, { prefix: router.prefix_route })
-    })
-
     this.app.get('/', async (request, reply) => {
       reply.send({message: `App listening on the http://${this.app_domain}:${this.app_port} 🌟👻`})
     })
 
     this.app.get('/healthcheck', async (request, reply) => {
       reply.send({healthcheck: "server is alive"})
+    })
+
+    routes.forEach((route) => {
+      let router = new route()
+      this.app.register(router.routes, { prefix: router.prefix_route })
     })
   }
 

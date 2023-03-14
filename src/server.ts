@@ -1,6 +1,7 @@
 import App from './app'
-import multer from 'fastify-multer'
-import fastifyCors from '@fastify/cors'
+import fastifyMultipart from 'fastify-multipart'
+import './helper/fastify.definition.handler'
+import  { FastifyMultipartOptions } from './models/options/fastify-multipart.option'
 
 import MapRoutes from './routes/map.route'
 
@@ -9,8 +10,7 @@ const app = new App({
     MapRoutes,
   ],
   plugins: [
-    multer.contentParser,
-    fastifyCors,
+    { plugin: fastifyMultipart, option: FastifyMultipartOptions },
   ],
 })
 
